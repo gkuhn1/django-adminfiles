@@ -10,8 +10,7 @@ JQUERY_URL = getattr(settings, 'JQUERY_URL',
 if JQUERY_URL and not ((':' in JQUERY_URL) or (JQUERY_URL.startswith('/'))):
     JQUERY_URL = posixpath.join(settings.MEDIA_URL, JQUERY_URL)
 
-ADMINFILES_MEDIA_URL = getattr(settings, 'ADMINFILES_MEDIA_URL',
-                               settings.MEDIA_URL)
+ADMINFILES_STATIC_URL = getattr(settings, 'ADMINFILES_STATIC_URL', settings.STATIC_URL)
 
 ADMINFILES_UPLOAD_TO = getattr(settings, 'ADMINFILES_UPLOAD_TO', 'adminfiles')
 

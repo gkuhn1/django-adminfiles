@@ -1,4 +1,5 @@
 dist/*
+*.pyc
 django_adminfiles.egg-info/*
 HGREV
 TAGS

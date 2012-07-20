@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.contrib import admin
 
 from adminfiles.models import FileUpload
-from adminfiles.settings import ADMINFILES_MEDIA_URL, JQUERY_URL
+from adminfiles.settings import ADMINFILES_STATIC_URL, JQUERY_URL
 from adminfiles.listeners import register_listeners
 
 class FileUploadAdmin(admin.ModelAdmin):
@@ -14,7 +14,7 @@ class FileUploadAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 # uncomment for snipshot photo editing feature
 #    class Media:
-#        js = (JQUERY_URL, posixpath.join(ADMINFILES_MEDIA_URL,
+#        js = (JQUERY_URL, posixpath.join(ADMINFILES_STATIC_URL,
 #                                         'photo-edit.js'))
     def response_change(self, request, obj):
         if request.POST.has_key("_popup"):
@@ -61,6 +61,28 @@ class FilePickerAdmin(admin.ModelAdmin):
         return field
 
     class Media:
-        js = [JQUERY_URL, posixpath.join(ADMINFILES_MEDIA_URL, 'adminfiles/model.js')]
+        js = [JQUERY_URL, posixpath.join(ADMINFILES_STATIC_URL, 'adminfiles/model.js')]
+
+
+class FilePickerInline(admin.StackedInline):
+
+    adminfiles_fields = []
+
+    def __init__(self, *args, **kwargs):
+        super(FilePickerInline, self).__init__(*args, **kwargs)
+        register_listeners(self.model, self.adminfiles_fields)
+
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        field = super(FilePickerInline, self).formfield_for_dbfield(
+            db_field, **kwargs)
+        if db_field.name in self.adminfiles_fields:
+            try:
+                field.widget.attrs['class'] += " adminfilespicker"
+            except KeyError:
+                field.widget.attrs['class'] = 'adminfilespicker'
+        return field
+
+    class Media:
+        js = [JQUERY_URL, posixpath.join(ADMINFILES_STATIC_URL, 'adminfiles/model.js')]
 
 admin.site.register(FileUpload, FileUploadAdmin)
