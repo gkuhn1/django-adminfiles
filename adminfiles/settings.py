@@ -47,3 +47,12 @@ ADMINFILES_BROWSER_VIEWS = getattr(settings, 'ADMINFILES_BROWSER_VIEWS',
                                     'adminfiles.views.FlickrView',
                                     'adminfiles.views.YouTubeView',
                                     'adminfiles.views.VimeoView'])
+
+
+ADMINFILES_BROWSER_WIDTH = getattr(settings, 'ADMINFILES_BROWSER_WIDTH', 400)
+
+ADMINFILES_BROWSER_HEIGHT = getattr(settings, 'ADMINFILES_BROWSER_HEIGHT', 400)
+
+ADMINFILES_BROWSER_POSITION = getattr(settings, 'ADMINFILES_BROWSER_HEIGHT', 'left')
+
+ADMINFILES_TOOLBOX_POSITION = getattr(settings, 'ADMINFILES_BROWSER_HEIGHT', 'bottom')

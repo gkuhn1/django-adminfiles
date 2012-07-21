@@ -1,0 +1,11 @@
+.adminfilespicker-wrapper {
+
+}
+
+.adminfilespicker-wrapper-bottom {
+    overflow: auto;
+}
+
+.adminfilespicker-trigger {
+    cursor: pointer;
+}
