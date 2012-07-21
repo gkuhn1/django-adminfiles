@@ -17,31 +17,36 @@
 {% block breadcrumbs %}{% endblock %}
 {% block userlinks %}{% endblock %}
 {% block content %}
-<div id="adminfiles-filter">
+<div id="adminfiles-filter" class="clearfix">
   <ul>
-  {% for browser in browsers %}
+
   <li>
-    <a href="{{ browser.url }}?field={{field_id}}">{{ browser.link_text }}</a>
+      <select id="browser">
+      {% for browser in browsers %}
+            <option value="{{ browser.url }}?field={{field_id}}"
+                    {% if request.path == browser.url %}selected="selected"{% endif %}>{{ browser.link_text }}</option>
+      {% endfor %}
+        </select>
   </li>
-  {% endfor %}
-  <li class="upload">
+
+  <li class="upload link">
     <a href="{% url "admin:adminfiles_fileupload_add" %}" class="addlink" id="add_id_uploads" onclick="return showAddUploadPopup(this);">{% trans "Upload" %}</a>
   </li>
-  <li>
+  <li class="link">
     <a id="refresh" href="#"><img src="{{ADMINFILES_STATIC_URL}}adminfiles/icon_refreshlink.gif" /> {% trans "Refresh" %}</a>
   </li>
 </div>
 
-<ul id="adminfiles">
+<ul id="adminfiles" class="clearfix">
 {% block files %}
 {% for f in files %}
    <li class="item {{f.content_type}} {{f.sub_type}}" {% if f.is_image %}style="background-image:url({% thumbnail f.upload "144x150" as thumb %}{{ thumb.url }}{% endthumbnail %});"{% else %}{% if f.mime_image %}style="background-image:url({{ f.mime_image }});"{% endif %}{% endif %}>
        <div class="popup">
            <a href="#" class="close" title="Close">X</a>
            <ul>
-	     {% ifequal field_type "select" %}
-	     <li><a class="select" href="{{f.upload.url}}" rel="{{f.id}}" title="{{f.title}}">{% trans "Select" %}</a></li>
-	     {% else %}
+         {% ifequal field_type "select" %}
+         <li><a class="select" href="{{f.upload.url}}" rel="{{f.id}}" title="{{f.title}}">{% trans "Select" %}</a></li>
+         {% else %}
              {% for link in f.insert_links %}
              <li>
                <a class="insert" href="{{ f.upload.url }}" rel="{{ link.ref }}">
@@ -49,7 +54,7 @@
                </a>
              </li>
              {% endfor %}
-	     {% endifequal %}
+         {% endifequal %}
            </ul>
            <a href="{% url "admin:adminfiles_fileupload_delete" f.id %}" class="deletelink" id="ddd" onclick="return showEditPopup(this);">{% trans "Delete" %}</a>
            <a href="{% url "admin:adminfiles_fileupload_change" f.id %}" class="changelink" id="eee" onclick="return showEditPopup(this);">{% trans "Change" %}</a>

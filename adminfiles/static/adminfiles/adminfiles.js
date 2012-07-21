@@ -87,4 +87,7 @@ $(function(){
 	    location.reload(true);
 	    return false;
 	});
+    $('#browser').change(function() {
+        location.href = $('#browser').val();
+    })
 });
