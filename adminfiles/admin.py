@@ -1,3 +1,4 @@
+from django.contrib.admin.options import BaseModelAdmin
 import posixpath
 
 from django.http import HttpResponse
@@ -43,7 +44,7 @@ class FileUploadAdmin(admin.ModelAdmin):
                                                          *args,
                                                          **kwargs)
 
-class FilePickerAdmin(admin.ModelAdmin):
+class FilePickerAdmin(object):
 
     adminfiles_fields = []
     wrapper_class = FilePickerWrapper
@@ -82,28 +83,5 @@ class FilePickerAdmin(admin.ModelAdmin):
         css = {
             'all': (posixpath.join(settings.ADMINFILES_STATIC_URL, 'adminfiles/filepicker.css'), )
         }
-
-
-class FilePickerInline(admin.StackedInline):
-
-    adminfiles_fields = []
-
-    def __init__(self, *args, **kwargs):
-        super(FilePickerInline, self).__init__(*args, **kwargs)
-        register_listeners(self.model, self.adminfiles_fields)
-
-    def formfield_for_dbfield(self, db_field, **kwargs):
-        field = super(FilePickerInline, self).formfield_for_dbfield(
-            db_field, **kwargs)
-        if db_field.name in self.adminfiles_fields:
-            kwargs.update({'widget': FilePickerWidgetWrapper(field.widget)})
-            field = super(FilePickerInline, self).formfield_for_dbfield(
-                        db_field, **kwargs)
-
-        return field
-
-    class Media:
-        js = [settings.JQUERY_URL, posixpath.join(settings.ADMINFILES_STATIC_URL, 'adminfiles/model.js')]
-
 
 admin.site.register(FileUpload, FileUploadAdmin)
