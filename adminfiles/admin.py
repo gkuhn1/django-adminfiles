@@ -1,4 +1,3 @@
-from django.contrib.admin.options import BaseModelAdmin
 import posixpath
 
 from django.http import HttpResponse
