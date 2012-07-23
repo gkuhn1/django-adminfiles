@@ -10,7 +10,11 @@
     display: none;
 }
 
-.adminfilespicker-widget-left {
+.adminfilespicker-widget-left, .adminfilespicker-wrapper-left {
+    float: left;
+}
+
+.adminfilespicker-toolbox-left, .adminfilespicker-browser-left{
     float: left;
 }
 

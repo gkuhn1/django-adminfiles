@@ -40,18 +40,21 @@ class FilePickerWrapper(BaseWidgetWrapper):
         self.browser_position = kwargs.get('browser_position')
         self.toolbox_position = kwargs.get('toolbox_position')
 
+        self.component_classes = ['adminfilespicker']
         self.widget_classes = ['adminfilespicker-widget']
-        self.wrapper_classes = ['adminfilespicker']
+        self.wrapper_classes = ['adminfilespicker-wrapper']
         self.toolbox_classes = ['adminfilespicker-toolbox']
         self.browser_classes = ['adminfilespicker-browser']
 
-        if self.toolbox_position == 'left' or self.browser_position == 'left':
+        if self.toolbox_position == 'left':
             self.widget_classes.append('adminfilespicker-widget-left')
-        if self.toolbox_position == 'bottom' and self.browser_position == 'left':
-            self.toolbox_classes.append('clear')
-        if self.toolbox_position == 'left' and self.browser_position == 'bottom':
-            self.toolbox_classes.append('clear')
-        if self.toolbox_position == 'fixed':
+            self.toolbox_classes.append('adminfilespicker-toolbox-left')
+
+
+        if self.browser_position == 'left':
+            self.wrapper_classes.append('adminfilespicker-wrapper-left')
+            self.browser_classes.append('adminfilespicker-browser-left')
+        elif self.browser_position == 'fixed':
             self.toolbox_classes.append('toolbox-fixed')
 
         try:
@@ -62,7 +65,7 @@ class FilePickerWrapper(BaseWidgetWrapper):
 
     def render(self, *args, **kwargs):
         widget_output = super(FilePickerWrapper, self).render(*args, **kwargs)
-        output = ['<div class="%s">' % ' '.join(self.wrapper_classes),'</div>']
+        output = ['<div class="%s">' % ' '.join(self.component_classes),'</div>']
 
         toolbox_markup = '<div class="%s">\
                                 <a class="addlink adminfilespicker-trigger">%s\
@@ -71,11 +74,9 @@ class FilePickerWrapper(BaseWidgetWrapper):
         browser_markup = '<div class="%s">\
                                 <iframe frameborder="0" style="border:none; width:%dpx; height:%dpx;"></iframe>\
                             </div>' % (' '.join(self.browser_classes), self.browser_width, self.browser_height)
+        wrapper_markup = '<div class="%s">%s</div>' \
+                        % (' '.join(self.wrapper_classes), ''.join([widget_output, toolbox_markup]), )
 
-        components = [browser_markup, toolbox_markup]
-        if self.toolbox_position == 'left' and self.browser_position == 'bottom':
-            components.reverse()
-        components.insert(0, widget_output)
-        output.insert(1, ''.join(components))
+        output.insert(1, ''.join([wrapper_markup, browser_markup]))
         return mark_safe(''.join(output))
 
