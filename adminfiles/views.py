@@ -24,7 +24,7 @@ class BaseView(TemplateView):
             'browsers': get_enabled_browsers(),
             'field_id': self.request.GET['field'],
             'field_type': self.request.GET.get('field_type', 'textarea'),
-            'ADMINFILES_MEDIA_URL': settings.ADMINFILES_MEDIA_URL,
+            'ADMINFILES_STATIC_URL': settings.ADMINFILES_STATIC_URL,
             'ADMINFILES_REF_START': settings.ADMINFILES_REF_START,
             'ADMINFILES_REF_END': settings.ADMINFILES_REF_END,
             'JQUERY_URL': settings.JQUERY_URL
