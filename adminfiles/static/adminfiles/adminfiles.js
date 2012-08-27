@@ -1,19 +1,27 @@
 function insertAtCursor(myField, myValue) {
-    //IE support
-    if (document.selection) {
-        myField.focus();
-        sel = document.selection.createRange();
-        sel.text = myValue;
-    }
-    //MOZILLA/NETSCAPE support
-    else if (myField.selectionStart || myField.selectionStart == '0') {
-        var startPos = myField.selectionStart;
-        var endPos = myField.selectionEnd;
-        myField.value = myField.value.substring(0, startPos)
-        + myValue
-        + myField.value.substring(endPos, myField.value.length);
+    // ckeditor integration
+    var id = myField.id;
+    if ((window.top.CKEDITOR !== undefined) &&
+        (window.top.CKEDITOR.instances[id] !== undefined)){
+        var instance = window.top.CKEDITOR.instances[id];
+        instance.insertText(myValue);
     } else {
-        myField.value += myValue;
+      //IE support
+      if (document.selection) {
+          myField.focus();
+          sel = document.selection.createRange();
+          sel.text = myValue;
+      }
+      //MOZILLA/NETSCAPE support
+      else if (myField.selectionStart || myField.selectionStart == '0') {
+          var startPos = myField.selectionStart;
+          var endPos = myField.selectionEnd;
+          myField.value = myField.value.substring(0, startPos)
+          + myValue
+          + myField.value.substring(endPos, myField.value.length);
+      } else {
+          myField.value += myValue;
+      }
     }
 }
 
@@ -43,7 +51,7 @@ function showAddUploadPopup(triggeringLink) {
     } else {
         href  += '&_popup=1';
     }
-    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    var win = window.open(href, name, 'height=500, width=800, resizable=yes, scrollbars=yes');
     win.focus();
     return false;
 }
@@ -80,6 +88,7 @@ $(function(){
                   insertText = START + insertText + END;
                   }
               insertAtCursor(FIELD, insertText);
+              parent.$.fancybox.close();
 	      $(this).parents('.popup').hide();
 	      return false;
 	});

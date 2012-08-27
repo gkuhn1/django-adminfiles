@@ -7,9 +7,11 @@ from adminfiles.models import FileUpload
 from adminfiles import settings
 from adminfiles.listeners import register_listeners
 from adminfiles.widgets import FilePickerWrapper
+from adminfiles.forms import FileUploadForm
 
 
 class FileUploadAdmin(admin.ModelAdmin):
+    form = FileUploadForm
     list_display = ['title', 'description', 'upload_date', 'upload', 'mime_type']
     list_editable = ['description']
     prepopulated_fields = {'slug': ('title',)}
@@ -78,9 +80,14 @@ class FilePickerAdmin(object):
         }
 
     class Media:
-        js = [settings.JQUERY_URL, posixpath.join(settings.ADMINFILES_STATIC_URL, 'adminfiles/model.js')]
+        js = (settings.JQUERY_URL.replace(settings.django_settings.STATIC_URL, ''),
+              'adminfiles/fancybox/jquery.fancybox-1.3.4.js',
+              posixpath.join(settings.ADMINFILES_STATIC_URL, 'adminfiles/model.js'),
+              )
         css = {
-            'all': (posixpath.join(settings.ADMINFILES_STATIC_URL, 'adminfiles/filepicker.css'), )
+            'all': (posixpath.join(settings.ADMINFILES_STATIC_URL, 'adminfiles/filepicker.css'),
+                'adminfiles/fancybox/jquery.fancybox-1.3.4.css',
+                )
         }
 
 admin.site.register(FileUpload, FileUploadAdmin)

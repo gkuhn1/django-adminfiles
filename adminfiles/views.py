@@ -17,10 +17,12 @@ class DisableView(Exception):
 
 class BaseView(TemplateView):
     template_name = 'adminfiles/uploader/base.html'
+    content_type = None
 
     def get_context_data(self, **kwargs):
         context = super(BaseView, self).get_context_data(**kwargs)
         context.update({
+            'content_type': self.content_type,
             'browsers': get_enabled_browsers(),
             'field_id': self.request.GET['field'],
             'field_type': self.request.GET.get('field_type', 'textarea'),
@@ -74,9 +76,13 @@ class BaseView(TemplateView):
 
 class AllView(BaseView):
     link_text = _('All Uploads')
+    content_type = 'all'
 
     def files(self):
-        return FileUpload.objects.all()
+        queryset = FileUpload.objects.all()
+        if self.content_type not in (None, 'all'):
+            queryset = queryset.filter(content_type=self.content_type)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(AllView, self).get_context_data(**kwargs)
@@ -88,24 +94,24 @@ class AllView(BaseView):
 
 class ImagesView(AllView):
     link_text = _('Images')
-
-    def files(self):
-        return super(ImagesView, self).files().filter(content_type='image')
+    content_type = 'image'
 
 
 class AudioView(AllView):
     link_text = _('Audio')
+    content_type = 'audio'
 
-    def files(self):
-        return super(AudioView, self).files().filter(content_type='audio')
-
+class YouTubeLinkView(AllView):
+    link_text = _('Youtube videos')
+    content_type = 'youtubelink'
 
 class FilesView(AllView):
     link_text = _('Files')
+    content_type = 'files'
 
     def files(self):
-        not_files = ['video', 'image', 'audio']
-        return super(FilesView, self).files().exclude(content_type__in=not_files)
+        not_files = ['video', 'image', 'audio', 'youtubelink']
+        return FileUpload.objects.exclude(content_type__in=not_files)
 
 class OEmbedView(BaseView):
     @classmethod

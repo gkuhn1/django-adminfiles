@@ -24,7 +24,7 @@
       <select id="browser">
       {% for browser in browsers %}
             <option value="{{ browser.url }}?field={{field_id}}"
-                    {% if request.path == browser.url %}selected="selected"{% endif %}>{{ browser.link_text }}</option>
+                    {% if content_type == browser.content_type %}selected="selected"{% endif %}>{{ browser.link_text }}</option>
       {% endfor %}
         </select>
   </li>
@@ -40,7 +40,11 @@
 <ul id="adminfiles" class="clearfix">
 {% block files %}
 {% for f in files %}
-   <li class="item {{f.content_type}} {{f.sub_type}}" {% if f.is_image %}style="background-image:url({% thumbnail f.upload "144x150" as thumb %}{{ thumb.url }}{% endthumbnail %});"{% else %}{% if f.mime_image %}style="background-image:url({{ f.mime_image }});"{% endif %}{% endif %}>
+   <li class="item {{f.content_type}} {{f.sub_type}}"
+   {% with thumb=f.image_thumb %}
+      style="background-image:url({{ thumb }});"
+   {% endwith %}
+      >
        <div class="popup">
            <a href="#" class="close" title="Close">X</a>
            <ul>
@@ -49,7 +53,13 @@
          {% else %}
              {% for link in f.insert_links %}
              <li>
-               <a class="insert" href="{{ f.upload.url }}" rel="{{ link.ref }}">
+               <a class="insert" href="{% spaceless %}
+                  {% if f.upload %}
+                    {{ f.upload.url }}
+                  {% else %}
+                    {{ f.link }}
+                  {% endif %}
+                  {% endspaceless %}" rel="{{ link.ref }}">
                  {{ link.desc }}
                </a>
              </li>

@@ -5,12 +5,17 @@ from django.conf import settings as django_settings
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.core.files.images import get_image_dimensions
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
+from sorl.thumbnail import get_thumbnail
+
 from adminfiles import settings
+
+_thumb_functions = {}
 
 if 'tagging' in django_settings.INSTALLED_APPS:
     from tagging.fields import TagField
@@ -19,9 +24,10 @@ else:
 
 class FileUpload(models.Model):
     upload_date = models.DateTimeField(_('upload date'), auto_now_add=True)
-    upload = models.FileField(_('file'), upload_to=settings.ADMINFILES_UPLOAD_TO)
+    upload = models.FileField(_('file'), upload_to=settings.ADMINFILES_UPLOAD_TO, blank=True, null=True)
     title = models.CharField(_('title'), max_length=100)
     slug = models.SlugField(_('slug'), max_length=100, unique=True)
+    link = models.URLField(_('link'), max_length=500, null=True, blank=True)
     description = models.CharField(_('description'), blank=True, max_length=200)
     content_type = models.CharField(editable=False, max_length=100)
     sub_type = models.CharField(editable=False, max_length=100)
@@ -36,6 +42,11 @@ class FileUpload(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    def clean(self):
+        if not self.upload and not self.link:
+            # must have a file uploaded or a link
+            raise ValidationError(_('You must provide a file or a link.'))
 
     def mime_type(self):
         return '%s/%s' % (self.content_type, self.sub_type)
@@ -64,12 +75,18 @@ class FileUpload(models.Model):
         return self._get_dimensions()[1]
     
     def save(self, *args, **kwargs):
-        (mime_type, encoding) = mimetypes.guess_type(self.upload.path)
-        try:
-            [self.content_type, self.sub_type] = mime_type.split('/')
-        except:
-            self.content_type = 'text'
-            self.sub_type = 'plain'
+        if self.upload:
+            (mime_type, encoding) = mimetypes.guess_type(self.upload.path)
+            try:
+                [self.content_type, self.sub_type] = mime_type.split('/')
+            except:
+                self.content_type = 'text'
+                self.sub_type = 'plain'
+        else:
+            # is link
+            # content type was filled in form clean
+            assert self.content_type
+            self.sub_type = 'link'
         super(FileUpload, self).save()
 
     def insert_links(self):
@@ -86,7 +103,15 @@ class FileUpload(models.Model):
             yield {'desc': link[0],
                    'ref': ref}
 
+    def image_thumb(self):
+        if self.upload and self.is_image():
+            return get_thumbnail(self.upload, "144x150").url
+        return self.mime_image()
+
     def mime_image(self):
+        global _thumb_functions
+        if self.content_type in _thumb_functions:
+            return _thumb_functions.get(self.content_type)(self)
         if not settings.ADMINFILES_STDICON_SET:
             return None
         return ('http://www.stdicon.com/%s/%s?size=64'

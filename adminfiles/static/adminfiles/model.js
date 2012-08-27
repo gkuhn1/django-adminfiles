@@ -1,10 +1,10 @@
 (function($) {
 $(function(){
     $('.adminfilespicker').each(function(){
-            var widget = $($(this).find('.adminfilespicker-widget')[0]);
-            var browser = $($(this).find('.adminfilespicker-browser')[0]);
-            var iframe = $($(this).find('iframe')[0]);
-            var trigger = $($(this).find('.adminfilespicker-trigger')[0]);
+            var widget = $(this).find('.adminfilespicker-widget').first();
+            var browser = $(this).find('.adminfilespicker-browser').first();
+            var iframe = $(this).find('iframe').first();
+            trigger = $(this).find('.adminfilespicker-trigger').first();
 
             var href = '/adminfiles/all/?field='+widget.attr('id');
 
@@ -12,11 +12,14 @@ $(function(){
                 widget.siblings('a.add-another').remove();
                 href += '&field_type=select';
             }
-
-            trigger.click(function() {
-                browser.toggle();
-            });
-            iframe.attr('src', href);
+            trigger.attr('href', href).fancybox({
+                  type: 'iframe',
+                  href: href,
+                  width: '80%',
+                  height: '80%',
+                  autoDimensions: false
+                });
+            // iframe.attr('src', href);
        });
     });
 })(jQuery);

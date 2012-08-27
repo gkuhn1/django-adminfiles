@@ -111,11 +111,15 @@ html[xmlns] .clearfix {
 .link {
     margin-top: 6px;
 }
+
+.item.link {
+  margin-top: 0;
+}
         
 /* mimetypes, icons from Nuvola */
-.image, .video { 
+.image, .video, .youtubelink { 
     background-image:none; 
-    background-position:center center; 
+    background-position:center bottom; 
 }
 
 .pdf { background-image:url(mimetypes/pdf.png); }
