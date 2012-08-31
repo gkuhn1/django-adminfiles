@@ -27,13 +27,18 @@ ADMINFILES_THUMB_ORDER = getattr(settings, 'ADMINFILES_THUMB_ORDER',
 
 ADMINFILES_USE_SIGNALS = getattr(settings, 'ADMINFILES_USE_SIGNALS', False)
 
-ADMINFILES_REF_START = getattr(settings, 'ADMINFILES_REF_START', '<<<!')
+ADMINFILES_REF_START = getattr(settings, 'ADMINFILES_REF_START', ['<<<!', '&lt;&lt;&lt;!'])
 
-ADMINFILES_REF_END = getattr(settings, 'ADMINFILES_REF_END', '!>>>')
+ADMINFILES_REF_END = getattr(settings, 'ADMINFILES_REF_END', ['!>>>', '!&gt;&gt;&gt;'])
 
 ADMINFILES_STRING_IF_NOT_FOUND = getattr(settings,
                                          'ADMINFILES_STRING_IF_NOT_FOUND',
                                          u'')
+ADMINFILES_APP_LABEL = getattr(settings, 'ADMINFILES_APP_LABEL', 'adminfiles')
+ADMINFILES_ENABLE_GALLERY = getattr(settings, 'ADMINFILES_ENABLE_GALLERY',
+                                    False)
+ADMINFILES_ENABLE_GALLERY = getattr(settings, 'ADMINFILES_ENABLE_GALLERY',
+                                    False)
 
 ADMINFILES_INSERT_LINKS = getattr(
     settings,
@@ -62,6 +67,11 @@ ADMINFILES_ALLOWED_LINKS = getattr(settings, 'ADMINFILES_ALLOWED_LINKS', [
             (r'(^http(s){0,1}://){0,1}(youtu.be/|(www.){0,1}youtube.com/watch\?v=)\w+', 'youtubelink'),
                                 ])
 
+# need django-admin-multiupload to work
+# http://code.google.com/p/django-admin-multiupload/
+ADMINFILES_ALLOW_MULTIUPLOAD = getattr(settings,
+                                        'ADMINFILES_ALLOW_MULTIUPLOAD',
+                                        False)
 
 ADMINFILES_BROWSER_WIDTH = getattr(settings, 'ADMINFILES_BROWSER_WIDTH', 400)
 

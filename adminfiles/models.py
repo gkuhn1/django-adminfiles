@@ -1,4 +1,5 @@
 import os
+import re
 import mimetypes
 
 from django.conf import settings as django_settings
@@ -22,6 +23,37 @@ if 'tagging' in django_settings.INSTALLED_APPS:
 else:
     TagField = None
 
+if settings.ADMINFILES_ENABLE_GALLERY:
+    class FileGallery(models.Model):
+        title = models.CharField(_('title'), max_length=100)
+        slug = models.SlugField(_('slug'), max_length=100, unique=True)
+        description = models.CharField(_('description'), blank=True,
+                                        max_length=200)
+        created_at = models.DateTimeField(_('created'), auto_now_add=True)
+        files = models.ManyToManyField('FileUpload')
+        class Meta:
+            verbose_name = _('file gallery')
+            verbose_name_plural = _('file galleries')
+            ordering = ['created_at',]
+            app_label = settings.ADMINFILES_APP_LABEL
+            db_table = 'adminfiles_filegallery'
+        def __unicode__(self):
+            return self.title
+
+    class GalleryGeneric(models.Model):
+        gallery = models.ForeignKey('FileGallery')
+        order = models.IntegerField(null=True, blank=True)
+        content_type = models.ForeignKey(ContentType)
+        object_id = models.PositiveIntegerField()
+        content_object = generic.GenericForeignKey('content_type', 'object_id')
+        class Meta:
+            ordering = ['order', 'id']
+            verbose_name = _('gallery')
+            verbose_name_plural = _('galleries')
+            app_label = settings.ADMINFILES_APP_LABEL
+            db_table = 'adminfiles_gallerygeneric'
+
+
 class FileUpload(models.Model):
     upload_date = models.DateTimeField(_('upload date'), auto_now_add=True)
     upload = models.FileField(_('file'), upload_to=settings.ADMINFILES_UPLOAD_TO, blank=True, null=True)
@@ -36,9 +68,11 @@ class FileUpload(models.Model):
         tags = TagField(_('tags'))
     
     class Meta:
-        ordering = ['upload_date', 'title']
+        ordering = ['-upload_date', 'title']
         verbose_name = _('file upload')
         verbose_name_plural = _('file uploads')
+        db_table = 'adminfiles_fileupload'
+        app_label = settings.ADMINFILES_APP_LABEL
 
     def __unicode__(self):
         return self.title
@@ -51,6 +85,14 @@ class FileUpload(models.Model):
     def mime_type(self):
         return '%s/%s' % (self.content_type, self.sub_type)
     mime_type.short_description = _('mime type')
+    def type(self):
+        types = {
+           'audio': _(u'Audio'),
+           'image': _(u'Image'),
+           'youtubelink': _(u'youtube link'),
+        }
+        return types.get(self.content_type, _('file'))
+    type.short_description = _('type')
 
     def type_slug(self):
         return slugify(self.sub_type)
@@ -103,10 +145,19 @@ class FileUpload(models.Model):
             yield {'desc': link[0],
                    'ref': ref}
 
-    def image_thumb(self):
+    def image_thumb(self, admin=False):
         if self.upload and self.is_image():
-            return get_thumbnail(self.upload, "144x150").url
+            size = "144x150"
+            if admin:
+                size = 'x60'
+            return get_thumbnail(self.upload, size).url
         return self.mime_image()
+
+    def admin_image_thumb(self):
+        return '<img src="%s" style="max-height: 60px" />' % self.image_thumb(admin=True)
+    admin_image_thumb.allow_tags = True
+    admin_image_thumb.admin_order_field = 'content_type'
+    admin_image_thumb.short_description = _(u'Thumbnail')
 
     def mime_image(self):
         global _thumb_functions
@@ -116,6 +167,15 @@ class FileUpload(models.Model):
             return None
         return ('http://www.stdicon.com/%s/%s?size=64'
                 % (settings.ADMINFILES_STDICON_SET, self.mime_type()))
+
+    def youtube_code(self):
+        '''
+        Parse youtube link to get the code for embeding
+        '''
+        assert self.content_type == 'youtubelink', _(u'Must be a youtubelink')
+        rex = r'(^http(s){0,1}://){0,1}(youtu.be/|(www.){0,1}youtube.com/watch\?v=)(?P<video_id>\w+)'
+        match = re.match(rex, self.link).groupdict()
+        return match['video_id']
 
 
 
@@ -131,3 +191,32 @@ class FileUploadReference(models.Model):
 
     class Meta:
         unique_together = ('upload', 'content_type', 'object_id')
+        db_table = 'adminfiles_fileuploadreference'
+        app_label = settings.ADMINFILES_APP_LABEL
+
+
+
+from django.template.defaultfilters import slugify
+
+def find_available_slug(object, instance, slug):
+    """
+    Recursive method that will add underscores to a slug field
+    until a free value is located
+    """
+    try:
+        sender_node = object.objects.get(slug=slug)
+    except object.DoesNotExist:
+        instance.slug = slug
+    else:
+        slug = '%s_' % slug
+        find_available_slug(object, instance, slug)
+    return
+
+def slug_generator(sender, **kwargs):
+    """ Generates a unique slug for a node """
+    instance = kwargs['instance']
+    if instance.slug is not '':
+        return
+    slug = slugify(instance.title)
+    find_available_slug(sender, instance, slug)
+models.signals.pre_save.connect(slug_generator, sender=FileUpload)

@@ -1,0 +1,185 @@
+# Translation for adminfiles app.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# GUILHERME KUHN <g.kuhn0@gmail.com>, 2012.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: django-adminfiles\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-08-31 11:38-0300\n"
+"PO-Revision-Date: 2012-08-31 11:11+0300\n"
+"Last-Translator: GUILHERME KUHN <g.kuhn0@gmail.com>\n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#: admin.py:24 models.py:94
+msgid "type"
+msgstr "Tipo"
+
+#: admin.py:41
+msgid "All"
+msgstr "Todos"
+
+#: forms.py:34
+msgid "This link is not allowed."
+msgstr "Este link não é permitido."
+
+#: models.py:27 models.py:59
+msgid "title"
+msgstr "Título"
+
+#: models.py:28 models.py:60
+msgid "slug"
+msgstr "Slug"
+
+#: models.py:29 models.py:62
+msgid "description"
+msgstr "Descrição"
+
+#: models.py:31
+msgid "created"
+msgstr "Criado"
+
+#: models.py:34
+msgid "file gallery"
+msgstr "Galeria de arquivos"
+
+#: models.py:35
+msgid "file galleries"
+msgstr "Galerias de arquivos"
+
+#: models.py:50
+msgid "gallery"
+msgstr "Galeria"
+
+#: models.py:51
+msgid "galleries"
+msgstr "Galerias"
+
+#: models.py:57
+msgid "upload date"
+msgstr "Data de upload"
+
+#: models.py:58 models.py:93
+msgid "file"
+msgstr "Arquivo"
+
+#: models.py:61
+msgid "link"
+msgstr "Link"
+
+#: models.py:67
+msgid "tags"
+msgstr "Tags"
+
+#: models.py:71
+msgid "file upload"
+msgstr "Arquivo"
+
+#: models.py:72
+msgid "file uploads"
+msgstr "Arquivos"
+
+#: models.py:82
+msgid "You must provide a file or a link."
+msgstr "Você deve fornecer um arquivo ou um link."
+
+#: models.py:86
+msgid "mime type"
+msgstr "MimeType"
+
+#: models.py:89 views.py:113
+msgid "Audio"
+msgstr "Audio"
+
+#: models.py:90
+#, fuzzy
+msgid "Image"
+msgstr "Imagens"
+
+#: models.py:91
+#, fuzzy
+msgid "youtube link"
+msgstr "Vídeos do Youtube"
+
+#: models.py:159
+msgid "Thumbnail"
+msgstr "Minhatura"
+
+#: settings.py:46
+msgid "Insert Link"
+msgstr "Inserir link"
+
+#: settings.py:47
+msgid "Insert"
+msgstr "Inserir"
+
+#: settings.py:48
+msgid "Insert (align left)"
+msgstr "Inserir (alinhamento esq.)"
+
+#: settings.py:49
+msgid "Insert (align right)"
+msgstr "Inserir (alinhamento dir.)"
+
+#: views.py:79
+msgid "All Uploads"
+msgstr "Todos envios"
+
+#: views.py:108
+msgid "Images"
+msgstr "Imagens"
+
+#: views.py:117
+msgid "Youtube videos"
+msgstr "Vídeos do Youtube"
+
+#: views.py:121
+msgid "Files"
+msgstr "Arquivos"
+
+#: templates/adminfiles/uploader/base.html:33
+msgid "Upload"
+msgstr "Enviar"
+
+#: templates/adminfiles/uploader/base.html:36
+msgid "Refresh"
+msgstr "Atualizar"
+
+#: templates/adminfiles/uploader/base.html:52
+msgid "Select"
+msgstr "Selecione"
+
+#: templates/adminfiles/uploader/base.html:69
+msgid "Delete"
+msgstr "Excluir"
+
+#: templates/adminfiles/uploader/base.html:70
+msgid "Change"
+msgstr "Alterar"
+
+#: templates/adminfiles/uploader/flickr.html:6
+msgid "Newer"
+msgstr "Novo"
+
+#: templates/adminfiles/uploader/flickr.html:8
+msgid "Older"
+msgstr "Antigo"
+
+#: templates/adminfiles/uploader/flickr.html:15
+msgid "Insert Photo"
+msgstr "Inserir foto"
+
+#: templates/adminfiles/uploader/video.html:7
+msgid "Close"
+msgstr "Fechar"
+
+#: templates/adminfiles/uploader/video.html:9
+msgid "Insert Video"
+msgstr "Inserir Vídeo"

@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import View, TemplateView
+from django.db.models import Q
 
 from adminfiles.models import FileUpload
 from adminfiles import settings
@@ -27,8 +28,8 @@ class BaseView(TemplateView):
             'field_id': self.request.GET['field'],
             'field_type': self.request.GET.get('field_type', 'textarea'),
             'ADMINFILES_STATIC_URL': settings.ADMINFILES_STATIC_URL,
-            'ADMINFILES_REF_START': settings.ADMINFILES_REF_START,
-            'ADMINFILES_REF_END': settings.ADMINFILES_REF_END,
+            'ADMINFILES_REF_START': settings.ADMINFILES_REF_START[0],
+            'ADMINFILES_REF_END': settings.ADMINFILES_REF_END[0],
             'JQUERY_URL': settings.JQUERY_URL
         })
 
@@ -78,11 +79,22 @@ class AllView(BaseView):
     link_text = _('All Uploads')
     content_type = 'all'
 
-    def files(self):
-        queryset = FileUpload.objects.all()
-        if self.content_type not in (None, 'all'):
-            queryset = queryset.filter(content_type=self.content_type)
-        return queryset
+    @classmethod
+    def get_query(cls):
+        '''Must return a list or a dict'''
+        query = {}
+        if cls.content_type not in (None, 'all'):
+            query.update({
+                'content_type': cls.content_type,
+                })
+        return query
+
+    def files(self, queryset=None):
+        queryset = queryset or FileUpload.objects.all()
+        query = self.get_query()
+        if isinstance(query, dict):
+            return queryset.filter(**query)
+        return queryset.filter(*query)
 
     def get_context_data(self, **kwargs):
         context = super(AllView, self).get_context_data(**kwargs)
@@ -109,9 +121,10 @@ class FilesView(AllView):
     link_text = _('Files')
     content_type = 'files'
 
-    def files(self):
+    @classmethod
+    def get_query(cls):
         not_files = ['video', 'image', 'audio', 'youtubelink']
-        return FileUpload.objects.exclude(content_type__in=not_files)
+        return (~Q(content_type__in=not_files), )
 
 class OEmbedView(BaseView):
     @classmethod

@@ -3,20 +3,15 @@
 Thumbnail generation functions
 """
 
-import re
-
 def youtube_thumbnail(instance):
-    link = instance.link
-    rex = r'(^http(s){0,1}://){0,1}(youtu.be/|(www.){0,1}youtube.com/watch\?v=)(?P<video_id>\w+)'
-    match = re.match(rex, link).groupdict()
-    video_id = match['video_id']
+    video_id = instance.youtube_code()
     url = 'http://i4.ytimg.com/vi/%s/default.jpg'
     return url % video_id
 
 from adminfiles.models import _thumb_functions
 def register_thumb_fn(func, contenttype):
     '''
-    Decorator to register a new thumb generate function.
+    Fn to register a new thumb generate function.
     Thumbfunction must return an IMAGE URL.
     Please see youtube_thumbnail for referance
     Usage:
@@ -24,6 +19,8 @@ def register_thumb_fn(func, contenttype):
         # register must be in models.py or __init__.py file.
     '''
     global _thumb_functions
+    if contenttype in _thumb_functions:
+        raise Exception('%s already registered.' % contenttype)
     _thumb_functions[contenttype] = func
     return True
 
