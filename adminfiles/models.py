@@ -11,6 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+from django.contrib.auth.models import User
 
 from sorl.thumbnail import get_thumbnail
 
@@ -53,16 +54,24 @@ if settings.ADMINFILES_ENABLE_GALLERY:
             app_label = settings.ADMINFILES_APP_LABEL
             db_table = 'adminfiles_gallerygeneric'
 
+def file_upload_to(instance, filename):
+    path = settings.ADMINFILES_UPLOAD_TO
+    name, ext = filename.rsplit('.', 1)
+    name = slugify(name).replace('-','_')
+    return os.path.join(path, '%s.%s' % (name, ext))
 
 class FileUpload(models.Model):
     upload_date = models.DateTimeField(_('upload date'), auto_now_add=True)
-    upload = models.FileField(_('file'), upload_to=settings.ADMINFILES_UPLOAD_TO, blank=True, null=True)
+    upload = models.FileField(_('file'), upload_to=file_upload_to,
+        blank=True, null=True)
     title = models.CharField(_('title'), max_length=100)
     slug = models.SlugField(_('slug'), max_length=100, unique=True)
     link = models.URLField(_('link'), max_length=500, null=True, blank=True)
     description = models.CharField(_('description'), blank=True, max_length=200)
     content_type = models.CharField(editable=False, max_length=100)
     sub_type = models.CharField(editable=False, max_length=100)
+    uploaded_by = models.ForeignKey(User, blank=True, null=True,
+        verbose_name=_(u'uploaded by'), related_name='uploaded_files')
 
     if TagField:
         tags = TagField(_('tags'))

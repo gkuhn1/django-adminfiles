@@ -90,9 +90,10 @@ if settings.ADMINFILES_ALLOW_MULTIUPLOAD:
             "application/msword",
         )
 
-        def process_uploaded_file(self, uploaded, object, **kwargs):
-            title = kwargs.get('title', [''])[0] or uploaded.name
-            f = self.model(upload=uploaded, title=title)
+        def process_uploaded_file(self, uploaded, object, request):
+            title = request.POST.get('title', '') or uploaded.name
+            f = self.model(upload=uploaded, title=title,
+                uploaded_by=request.user)
             f.save()
             return {
                 'url': f.image_thumb(),
@@ -130,6 +131,12 @@ class FileUploadAdmin(BaseFileUploadAdmin):
 #    class Media:
 #        js = (JQUERY_URL, posixpath.join(ADMINFILES_STATIC_URL,
 #                                         'photo-edit.js'))
+
+    def save_model(self, request, obj, form, change):
+        # auto fill uploaded_by with logger user
+        obj.uploaded_by = request.user
+        super(FileUploadAdmin, self).save_model(request, obj, form, change)
+
     def response_change(self, request, obj):
         if request.POST.has_key("_popup"):
             return HttpResponse('<script type="text/javascript">'
