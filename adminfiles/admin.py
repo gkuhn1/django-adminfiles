@@ -120,9 +120,9 @@ if FileGallery:
 
 class FileUploadAdmin(BaseFileUploadAdmin):
     form = FileUploadForm
-    list_display = ['admin_image_thumb', 'title', 'description',
-        'upload_date', 'upload', 'type']
-    list_filter = [('content_type', ContentTypeListFilter),]
+    list_display = ['admin_image_thumb', 'description',
+        'upload_date', 'type']
+    list_filter = [('content_type', ContentTypeListFilter), 'uploaded_by']
     date_hierarchy = 'upload_date'
     search_fields = ['title', 'description']
     list_editable = ['description']

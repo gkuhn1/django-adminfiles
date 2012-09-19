@@ -40,6 +40,11 @@ if settings.ADMINFILES_ENABLE_GALLERY:
             db_table = 'adminfiles_filegallery'
         def __unicode__(self):
             return self.title
+        def filter_images(self):
+            '''
+            return just images files from this gallery
+            '''
+            return self.files.filter(content_type='image')
 
     class GalleryGeneric(models.Model):
         gallery = models.ForeignKey('FileGallery')
@@ -53,6 +58,8 @@ if settings.ADMINFILES_ENABLE_GALLERY:
             verbose_name_plural = _('galleries')
             app_label = settings.ADMINFILES_APP_LABEL
             db_table = 'adminfiles_gallerygeneric'
+        def __unicode__(self):
+            return self.gallery.title
 
 def file_upload_to(instance, filename):
     path = settings.ADMINFILES_UPLOAD_TO
@@ -163,9 +170,10 @@ class FileUpload(models.Model):
         return self.mime_image()
 
     def admin_image_thumb(self):
-        return '<img src="%s" style="max-height: 60px" />' % self.image_thumb(admin=True)
+        return '%s<br/><img src="%s" style="max-height: 60px" />' % (
+            self.title, self.image_thumb(admin=True))
     admin_image_thumb.allow_tags = True
-    admin_image_thumb.admin_order_field = 'content_type'
+    admin_image_thumb.admin_order_field = 'title'
     admin_image_thumb.short_description = _(u'Thumbnail')
 
     def mime_image(self):
