@@ -166,7 +166,11 @@ class FileUpload(models.Model):
             size = "144x150"
             if admin:
                 size = 'x60'
-            return get_thumbnail(self.upload, size).url
+            try:
+                return get_thumbnail(self.upload, size).url
+            except IOError, e:
+                # if file doesnt exists, fail silently
+                return ''
         return self.mime_image()
 
     def admin_image_thumb(self):
