@@ -99,7 +99,10 @@ class AllView(BaseView):
     def get_context_data(self, **kwargs):
         context = super(AllView, self).get_context_data(**kwargs)
         context.update({
-            'files': self.files().order_by(*settings.ADMINFILES_THUMB_ORDER)
+            'files': self.files().order_by(*settings.ADMINFILES_THUMB_ORDER),
+            'add_url': settings.ADMINFILES_ADD_URL,
+            'delete_url': settings.ADMINFILES_DELETE_URL,
+            'change_url': settings.ADMINFILES_CHANGE_URL,
         })
         return context
 

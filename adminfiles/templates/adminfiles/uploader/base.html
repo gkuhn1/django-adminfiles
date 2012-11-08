@@ -30,7 +30,7 @@
   </li>
 
   <li class="upload link">
-    <a href="{% url "admin:adminfiles_fileupload_add" %}" class="addlink" id="add_id_uploads" onclick="return showAddUploadPopup(this);">{% trans "Upload" %}</a>
+    <a href="{% url add_url %}" class="addlink" id="add_id_uploads" onclick="return showAddUploadPopup(this);">{% trans "Upload" %}</a>
   </li>
   <li class="link">
     <a id="refresh" href="#"><img src="{{ADMINFILES_STATIC_URL}}adminfiles/icon_refreshlink.gif" /> {% trans "Refresh" %}</a>
@@ -66,8 +66,8 @@
              {% endfor %}
          {% endifequal %}
            </ul>
-           <a href="{% url "admin:adminfiles_fileupload_delete" f.id %}" class="deletelink" id="ddd" onclick="return showEditPopup(this);">{% trans "Delete" %}</a>
-           <a href="{% url "admin:adminfiles_fileupload_change" f.id %}" class="changelink" id="eee" onclick="return showEditPopup(this);">{% trans "Change" %}</a>
+           <a href="{% url delete_url f.id %}" class="deletelink" id="ddd" onclick="return showEditPopup(this);">{% trans "Delete" %}</a>
+           <a href="{% url change_url f.id %}" class="changelink" id="eee" onclick="return showEditPopup(this);">{% trans "Change" %}</a>
        </div>
        <div class="upload-title">{{f.title}}<br />
          <small>{{f.upload_date|date:"F j, Y"}}</small><br />

@@ -63,9 +63,15 @@ if settings.ADMINFILES_ENABLE_GALLERY:
 
 def file_upload_to(instance, filename):
     path = settings.ADMINFILES_UPLOAD_TO
-    name, ext = filename.rsplit('.', 1)
+    try:
+        name, ext = filename.rsplit('.', 1)
+    except ValueError:
+        # when file has no extension
+        name = filename
+        ext = None
     name = slugify(name).replace('-','_')
-    return os.path.join(path, '%s.%s' % (name, ext))
+    return os.path.join(path, '%s%s%s' % (name, ext and '.' or '',
+        ext or ''))
 
 class FileUpload(models.Model):
     upload_date = models.DateTimeField(_('upload date'), auto_now_add=True)
@@ -88,7 +94,6 @@ class FileUpload(models.Model):
         verbose_name = _('file upload')
         verbose_name_plural = _('file uploads')
         db_table = 'adminfiles_fileupload'
-        app_label = settings.ADMINFILES_APP_LABEL
 
     def __unicode__(self):
         return self.title
