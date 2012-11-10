@@ -4,6 +4,7 @@ import mimetypes
 
 from django.conf import settings as django_settings
 from django.db import models
+from django.db.models import Q
 from django.template.defaultfilters import slugify
 from django.core.files.images import get_image_dimensions
 from django.core.exceptions import ValidationError
@@ -45,6 +46,17 @@ if settings.ADMINFILES_ENABLE_GALLERY:
             return just images files from this gallery
             '''
             return self.files.filter(content_type='image')
+        def filter_audios(self):
+            'Return audios'
+            return self.files.filter(content_type='audio')
+        def filter_videos(self):
+            'Return videos and youtubelinks'
+            return self.files.filter(Q(content_type='youtubelink')|
+                Q(content_type='video'))
+        def filter_docs(self):
+            'Return files'
+            not_files = ['video', 'image', 'audio', 'youtubelink']
+            return self.files.exclude(content_type__in=not_files)
 
     class GalleryGeneric(models.Model):
         gallery = models.ForeignKey('FileGallery')
