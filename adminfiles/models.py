@@ -110,6 +110,9 @@ class FileUpload(models.Model):
     def __unicode__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return self.upload.url
+
     def clean(self):
         if not self.upload and not self.link:
             # must have a file uploaded or a link
@@ -211,7 +214,7 @@ class FileUpload(models.Model):
         Parse youtube link to get the code for embeding
         '''
         assert self.content_type == 'youtubelink', _(u'Must be a youtubelink')
-        rex = r'(^http(s){0,1}://){0,1}(youtu.be/|(www.){0,1}youtube.com/watch\?v=)(?P<video_id>\w+)'
+        rex = r'(^http(s){0,1}://){0,1}(youtu.be/|(www.){0,1}youtube.com/watch\?v=)(?P<video_id>[\w-]+)'
         match = re.match(rex, self.link).groupdict()
         return match['video_id']
 

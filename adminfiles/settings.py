@@ -64,7 +64,7 @@ ADMINFILES_BROWSER_VIEWS = getattr(settings, 'ADMINFILES_BROWSER_VIEWS',
 
 # list with regex to use with links
 ADMINFILES_ALLOWED_LINKS = getattr(settings, 'ADMINFILES_ALLOWED_LINKS', [
-            (r'(^http(s){0,1}://){0,1}(youtu.be/|(www.){0,1}youtube.com/watch\?v=)\w+', 'youtubelink'),
+            (r'(^http(s){0,1}://){0,1}(youtu.be/|(www.){0,1}youtube.com/watch\?v=)[\w-]+', 'youtubelink'),
                                 ])
 
 ADMINFILES_ADD_URL = getattr(settings, 'ADMINFILES_ADD_URL', 'admin:adminfiles_fileupload_add')
