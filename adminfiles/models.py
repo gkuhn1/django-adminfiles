@@ -102,7 +102,7 @@ class FileUpload(models.Model):
         tags = TagField(_('tags'))
     
     class Meta:
-        ordering = ['-upload_date', 'title']
+        ordering = settings.ADMINFILES_FILES_DEFAULT_ORDERING
         verbose_name = _('file upload')
         verbose_name_plural = _('file uploads')
         db_table = 'adminfiles_fileupload'

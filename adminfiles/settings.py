@@ -12,6 +12,10 @@ JQUERY_URL = getattr(settings, 'JQUERY_URL',
 if JQUERY_URL and not ((':' in JQUERY_URL) or (JQUERY_URL.startswith('/'))):
     JQUERY_URL = posixpath.join(settings.STATIC_URL, JQUERY_URL)
 
+ADMINFILES_FILES_DEFAULT_ORDERING = getattr(settings,
+                'ADMINFILES_FILES_DEFAULT_ORDERING',
+                ['title', '-upload_date'])
+
 # compatibility settings
 ADMINFILES_STATIC_URL = getattr(settings, 'ADMINFILES_STATIC_URL',
                                None) or \
