@@ -111,7 +111,9 @@ class FileUpload(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return self.upload.url
+        if self.upload:
+            return self.upload.url
+        return self.link
 
     def clean(self):
         if not self.upload and not self.link:
