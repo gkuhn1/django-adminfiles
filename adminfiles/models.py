@@ -159,6 +159,9 @@ class FileUpload(models.Model):
             (mime_type, encoding) = mimetypes.guess_type(self.upload.path)
             try:
                 [self.content_type, self.sub_type] = mime_type.split('/')
+                if self.content_type == 'application' and \
+                    self.sub_type == 'ogg':
+                    self.content_type = 'audio'
             except:
                 self.content_type = 'text'
                 self.sub_type = 'plain'
