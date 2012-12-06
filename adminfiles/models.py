@@ -25,6 +25,28 @@ if 'tagging' in django_settings.INSTALLED_APPS:
 else:
     TagField = None
 
+class FileQuerysetFilter(object):
+    '''
+    Filter a file queryset. This was created to encapsulate all
+        file filters.
+    '''
+    def __init__(self, queryset):
+        self.files = queryset
+    def filter_images(self):
+        'return just images files'
+        return self.files.filter(content_type='image')
+    def filter_audios(self):
+        'Return audios'
+        return self.files.filter(content_type='audio')
+    def filter_videos(self):
+        'Return videos and youtubelinks'
+        return self.files.filter(Q(content_type='youtubelink')|
+            Q(content_type='video'))
+    def filter_docs(self):
+        'Return files'
+        not_files = ['video', 'image', 'audio', 'youtubelink']
+        return self.files.exclude(content_type__in=not_files)
+
 if settings.ADMINFILES_ENABLE_GALLERY:
     class FileGallery(models.Model):
         title = models.CharField(_('title'), max_length=100)
@@ -42,25 +64,21 @@ if settings.ADMINFILES_ENABLE_GALLERY:
         def __unicode__(self):
             return self.title
         def filter_images(self):
-            '''
-            return just images files from this gallery
-            '''
-            return self.files.filter(content_type='image')
+            'return just images files from this gallery'
+            return FileQuerysetFilter(self.files).filter_images()
         def filter_audios(self):
             'Return audios'
-            return self.files.filter(content_type='audio')
+            return FileQuerysetFilter(self.files).filter_audios()
         def filter_videos(self):
             'Return videos and youtubelinks'
-            return self.files.filter(Q(content_type='youtubelink')|
-                Q(content_type='video'))
+            return FileQuerysetFilter(self.files).filter_videos()
         def filter_docs(self):
             'Return files'
-            not_files = ['video', 'image', 'audio', 'youtubelink']
-            return self.files.exclude(content_type__in=not_files)
+            return FileQuerysetFilter(self.files).filter_docs()
 
     class GalleryGeneric(models.Model):
-        gallery = models.ForeignKey('FileGallery')
-        order = models.IntegerField(null=True, blank=True)
+        gallery = models.ForeignKey('FileGallery', verbose_name=_(u'gallery'))
+        order = models.IntegerField(_(u'Order'), null=True, blank=True)
         content_type = models.ForeignKey(ContentType)
         object_id = models.PositiveIntegerField()
         content_object = generic.GenericForeignKey('content_type', 'object_id')
@@ -230,7 +248,9 @@ class FileUploadReference(models.Model):
     Tracks which ``FileUpload``s are referenced by which content models.
 
     """
-    upload = models.ForeignKey(FileUpload)
+    upload = models.ForeignKey(FileUpload, verbose_name=_(u'file'))
+    order = models.IntegerField(_(u'Order'), null=True,
+        default=10)
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey('content_type', 'object_id')
@@ -239,6 +259,9 @@ class FileUploadReference(models.Model):
         unique_together = ('upload', 'content_type', 'object_id')
         db_table = 'adminfiles_fileuploadreference'
         app_label = settings.ADMINFILES_APP_LABEL
+        ordering = ('order', '-id')
+        verbose_name = _(u'File')
+        verbose_name_plural = _(u'Files')
 
 
 

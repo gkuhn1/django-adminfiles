@@ -6,7 +6,7 @@ from django.contrib.admin.filters import FieldListFilter
 from django.contrib.contenttypes import generic
 from django.utils.translation import ugettext_lazy as _
 
-from adminfiles.models import FileUpload
+from adminfiles.models import FileUpload, FileUploadReference
 try:
     from adminfiles.models import FileGallery, GalleryGeneric
 except ImportError:
@@ -209,3 +209,8 @@ class FilePickerAdmin(object):
         }
 
 admin.site.register(FileUpload, FileUploadAdmin)
+
+class FileUploadInline(generic.GenericTabularInline):
+    model = FileUploadReference
+    raw_id_fields = ['upload',]
+    extra = 0
