@@ -40,11 +40,15 @@ class FileQuerysetFilter(object):
         return self.files.filter(content_type='audio')
     def filter_videos(self):
         'Return videos and youtubelinks'
+        if settings.ADMINFILES_VIDEOS_JUST_YOUTUBE:
+            return self.files.filter(Q(content_type='youtubelink'))
         return self.files.filter(Q(content_type='youtubelink')|
             Q(content_type='video'))
     def filter_docs(self):
         'Return files'
-        not_files = ['video', 'image', 'audio', 'youtubelink']
+        not_files = ['image', 'audio', 'youtubelink']
+        if not settings.ADMINFILES_VIDEOS_JUST_YOUTUBE:
+            not_files.append('video')
         return self.files.exclude(content_type__in=not_files)
 
 if settings.ADMINFILES_ENABLE_GALLERY:

@@ -15,6 +15,9 @@ if JQUERY_URL and not ((':' in JQUERY_URL) or (JQUERY_URL.startswith('/'))):
 ADMINFILES_FILES_DEFAULT_ORDERING = getattr(settings,
                 'ADMINFILES_FILES_DEFAULT_ORDERING',
                 ['title', '-upload_date'])
+ADMINFILES_VIDEOS_JUST_YOUTUBE = getattr(settings,
+                'ADMINFILES_VIDEOS_JUST_YOUTUBE',
+                False)
 
 # compatibility settings
 ADMINFILES_STATIC_URL = getattr(settings, 'ADMINFILES_STATIC_URL',
