@@ -79,6 +79,7 @@ if settings.ADMINFILES_ALLOW_MULTIUPLOAD:
             "text/plain", "application/xml", "text/xml", "text/html",
             # audio
             "audio/mpeg3", "audio/ogg", "audio/wav", "audio/mpeg",
+            "audio/mp3",
             # excel files
             "application/excel", "application/vnd.ms-excel",
             "application/x-excel", "application/x-msexcel",
