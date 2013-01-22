@@ -111,7 +111,8 @@ if FileGallery:
         extra = 0
 
     class FileGalleryAdmin(admin.ModelAdmin):
-        raw_id_fields = ('files',)
+        # raw_id_fields = ('files',)
+        filter_horizontal = ['files']
         prepopulated_fields = {'slug': ('title',)}
         date_hierarchy = 'created_at'
         list_display = ['title', 'description', 'created_at']

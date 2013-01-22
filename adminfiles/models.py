@@ -58,7 +58,7 @@ if settings.ADMINFILES_ENABLE_GALLERY:
         description = models.CharField(_('description'), blank=True,
                                         max_length=200)
         created_at = models.DateTimeField(_('created'), auto_now_add=True)
-        files = models.ManyToManyField('FileUpload')
+        files = models.ManyToManyField('FileUpload', verbose_name=_(u'Files'))
         class Meta:
             verbose_name = _('file gallery')
             verbose_name_plural = _('file galleries')
