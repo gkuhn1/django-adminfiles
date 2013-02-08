@@ -221,8 +221,11 @@ class FileUpload(models.Model):
         return self.mime_image()
 
     def admin_image_thumb(self):
-        return '%s<br/><img src="%s" style="max-height: 60px" />' % (
-            self.title, self.image_thumb(admin=True))
+        thumb = ''
+        if settings.ADMINFILES_SHOW_THUMB:
+            thumb = '<br/><img src="%s" style="max-height: 60px" />' % (
+                self.image_thumb(admin=True))
+        return '%s%s' % (self.title, thumb)
     admin_image_thumb.allow_tags = True
     admin_image_thumb.admin_order_field = 'title'
     admin_image_thumb.short_description = _(u'Thumbnail')

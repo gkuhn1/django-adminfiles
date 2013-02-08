@@ -31,6 +31,8 @@ ADMINFILES_UPLOAD_TO = getattr(settings, 'ADMINFILES_UPLOAD_TO',
 
 ADMINFILES_THUMB_ORDER = getattr(settings, 'ADMINFILES_THUMB_ORDER',
                                  ('-upload_date',))
+ADMINFILES_SHOW_THUMB = getattr(settings, 'ADMINFILES_SHOW_THUMB',
+                                True)
 
 ADMINFILES_USE_SIGNALS = getattr(settings, 'ADMINFILES_USE_SIGNALS', False)
 
