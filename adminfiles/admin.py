@@ -72,7 +72,7 @@ if settings.ADMINFILES_ALLOW_MULTIUPLOAD:
         # tuple with mimetype accepted
         multiupload_acceptedformats = (
             # images
-            "image/jpeg", "image/pjpeg", "image/png",
+            "image/jpeg", "image/pjpeg", "image/png", "image/gif",
             # pdf
             "application/pdf",
             # text
@@ -83,12 +83,16 @@ if settings.ADMINFILES_ALLOW_MULTIUPLOAD:
             # excel files
             "application/excel", "application/vnd.ms-excel",
             "application/x-excel", "application/x-msexcel",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             # ppt files
             "application/vnd.ms-powerpoint", "application/mspowerpoint",
             "application/powerpoint", "application/vnd.ms-powerpoint",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation", # pptx
+            "application/vnd.openxmlformats-officedocument.presentationml.slideshow", #ppsx
             "application/x-mspowerpoint",
             # doc files
             "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         )
 
         def process_uploaded_file(self, uploaded, object, request):
