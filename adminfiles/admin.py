@@ -205,12 +205,12 @@ class FilePickerAdmin(object):
 
     class Media:
         js = (settings.JQUERY_URL.replace(settings.django_settings.STATIC_URL, ''),
-              'adminfiles/fancybox/jquery.fancybox-1.3.4.js',
+              'fancybox/jquery.fancybox-1.3.4.js',
               posixpath.join(settings.ADMINFILES_STATIC_URL, 'adminfiles/model.js'),
               )
         css = {
             'all': (posixpath.join(settings.ADMINFILES_STATIC_URL, 'adminfiles/filepicker.css'),
-                'adminfiles/fancybox/jquery.fancybox-1.3.4.css',
+                'fancybox/jquery.fancybox-1.3.4.css',
                 )
         }
 
