@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 import subprocess
 import os.path
 
@@ -32,8 +32,7 @@ setup(
     author_email='carl@oddbird.net',
     long_description=long_description,
     url='http://bitbucket.org/carljm/django-adminfiles/',
-    packages=['adminfiles', 'adminfiles.templatetags', \
-              'adminfiles.management', 'adminfiles.management.commands'],
+    packages=find_packages(),
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
