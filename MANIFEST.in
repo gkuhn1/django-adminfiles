@@ -5,4 +5,3 @@ include MANIFEST.in
 include README.rst
 include TODO.rst
 recursive-include adminfiles *.png *.css *.js *.gif *.html *.mo *.po
-recursive-include adminfiles/migrations *
