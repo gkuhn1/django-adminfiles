@@ -69,7 +69,7 @@ class FilePickerWrapper(BaseWidgetWrapper):
         output = ['<div class="%s">' % ' '.join(self.component_classes),'</div>']
 
         toolbox_markup = '<div class="%s">\
-                            <a class="addlink adminfilespicker-trigger"
+                            <a class="addlink adminfilespicker-trigger" \
                                 href="%s">%s\
                                 </a>\
                             </div>' % (
