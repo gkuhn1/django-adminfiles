@@ -1,5 +1,6 @@
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as __
+from django.core.urlresolvers import reverse
 
 
 class BaseWidgetWrapper(object):
@@ -68,9 +69,14 @@ class FilePickerWrapper(BaseWidgetWrapper):
         output = ['<div class="%s">' % ' '.join(self.component_classes),'</div>']
 
         toolbox_markup = '<div class="%s">\
-                                <a class="addlink adminfilespicker-trigger">%s\
+                            <a class="addlink adminfilespicker-trigger"
+                                href="%s">%s\
                                 </a>\
-                            </div>' % (' '.join(self.toolbox_classes), self.labels['add_file'], )
+                            </div>' % (
+                                ' '.join(self.toolbox_classes),
+                                reverse('adminfiles_all'),
+                                self.labels['add_file'],
+                            )
         browser_markup = '<div class="%s">\
                                 <iframe frameborder="0" style="border:none; width:%dpx; height:%dpx;"></iframe>\
                             </div>' % (' '.join(self.browser_classes), self.browser_width, self.browser_height)

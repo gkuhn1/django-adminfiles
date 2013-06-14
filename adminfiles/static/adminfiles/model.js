@@ -4,9 +4,9 @@ $(function(){
             var widget = $(this).find('.adminfilespicker-widget').first();
             var browser = $(this).find('.adminfilespicker-browser').first();
             var iframe = $(this).find('iframe').first();
-            trigger = $(this).find('.adminfilespicker-trigger').first();
+            var trigger = $(this).find('.adminfilespicker-trigger').first();
 
-            var href = '/adminfiles/all/?field='+widget.attr('id');
+            var href = trigger.attr('href') + '?field='+widget.attr('id');
 
             if (widget.options) {
                 widget.siblings('a.add-another').remove();
