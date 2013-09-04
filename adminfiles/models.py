@@ -6,6 +6,7 @@ from django.conf import settings as django_settings
 from django.db import models
 from django.db.models import Q
 from django.template.defaultfilters import slugify
+from django.forms.fields import EMPTY_VALUES
 from django.core.files.images import get_image_dimensions
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
@@ -291,7 +292,7 @@ def find_available_slug(object, instance, slug):
 def slug_generator(sender, **kwargs):
     """ Generates a unique slug for a node """
     instance = kwargs['instance']
-    if instance.slug is not '':
+    if not instance.slug in EMPTY_VALUES:
         return
     slug = slugify(instance.title)
     find_available_slug(sender, instance, slug)
