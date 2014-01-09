@@ -13,7 +13,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
-from django.contrib.auth.models import User
 
 from sorl.thumbnail import get_thumbnail
 
@@ -118,12 +117,12 @@ class FileUpload(models.Model):
     description = models.CharField(_('description'), blank=True, max_length=200)
     content_type = models.CharField(editable=False, max_length=100)
     sub_type = models.CharField(editable=False, max_length=100)
-    uploaded_by = models.ForeignKey(User, blank=True, null=True,
+    uploaded_by = models.ForeignKey(django_settings.AUTH_USER_MODEL, blank=True, null=True,
         verbose_name=_(u'uploaded by'), related_name='uploaded_files')
 
     if TagField:
         tags = TagField(_('tags'))
-    
+
     class Meta:
         ordering = settings.ADMINFILES_FILES_DEFAULT_ORDERING
         verbose_name = _('file upload')
@@ -170,13 +169,13 @@ class FileUpload(models.Model):
             else:
                 self._dimensions_cache = (None, None)
         return self._dimensions_cache
-    
+
     def width(self):
         return self._get_dimensions()[0]
-    
+
     def height(self):
         return self._get_dimensions()[1]
-    
+
     def save(self, *args, **kwargs):
         if self.upload:
             (mime_type, encoding) = mimetypes.guess_type(self.upload.path)
