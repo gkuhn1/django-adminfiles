@@ -15,6 +15,7 @@ _compiled_regex_list = None
 class FileUploadForm(forms.ModelForm):
     class Meta:
         model = FileUpload
+        exclude = ()
 
     def get_regex(self):
         global _compiled_regex_list
